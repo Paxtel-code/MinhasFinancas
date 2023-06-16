@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using MinhasFinancas.Controller;
 using MinhasFinancas.Models;
 
@@ -6,9 +7,9 @@ namespace MinhasFinancas.Services;
 
 public class GerenciamentoDeTransacoes
 {
-    private TransacaoRepositoryMySQL _transacaoRepositoryMySql = new TransacaoRepositoryMySQL();
-    private CategoriaRepositoryMySQL _categoriaRepositoryMySql = new CategoriaRepositoryMySQL();
-
+    TransacaoRepositoryMySQL _transacaoRepositoryMySql = new TransacaoRepositoryMySQL();
+    CategoriaRepositoryMySQL _categoriaRepositoryMySql = new CategoriaRepositoryMySQL();
+    
     public void createTransacao(AppDbContext context, int userId)
     {
         Console.WriteLine("Digite o valor da transação:");
@@ -58,13 +59,17 @@ public class GerenciamentoDeTransacoes
     public void updateTransacao(AppDbContext context)
     {
     }
-
-    public void listTransacoesUser(AppDbContext context, int? userId)
-    {
-        _transacaoRepositoryMySql.getAllByUser(context, userId);
-    }
     
-    public void listarTran
+    public void listTransacoes(int userId)
+    {
+        
+        
+        
+        foreach (var transacao in list)
+        {
+            Console.WriteLine(transacao);
+        }
+    }
 
     public DateOnly transformDate(string date)
     {

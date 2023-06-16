@@ -20,7 +20,7 @@ public class GerenciamentoDeUsuarios
         {
             Console.WriteLine("Digite seu nome");
             nome = Console.ReadLine();
-            if (_userRepositoryMySql.existInDatabase(context, user, "Nome", nome) != null)
+            if (_userRepositoryMySql.existInDatabase(context,  "Nome", nome) != null)
                 Console.WriteLine("Nome ja registrado");
             else
                 break;
@@ -30,7 +30,7 @@ public class GerenciamentoDeUsuarios
         {
             Console.WriteLine("Digite seu E-mail");
             email = Console.ReadLine();
-            if (_userRepositoryMySql.existInDatabase(context, user, "Email", email) != null)
+            if (_userRepositoryMySql.existInDatabase(context,  "Email", email) != null)
                 Console.WriteLine("E-mail ja registrado");
             else
                 break;
@@ -78,7 +78,7 @@ public class GerenciamentoDeUsuarios
         {
             Console.WriteLine("Digite seu E-mail");
             email = Console.ReadLine();
-            databaseUser = _userRepositoryMySql.existInDatabase(context, user, "Email", email);
+            databaseUser = _userRepositoryMySql.existInDatabase(context,  "Email", email);
             if (databaseUser == null)
                 Console.WriteLine("E-mail não cadastrado no banco de dados!");
             else

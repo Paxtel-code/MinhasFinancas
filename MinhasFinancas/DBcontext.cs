@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public AppDbContext()
     {
         Transacoes = Set<Transacao>();
+        Categorias = Set<Categoria>();
         Users = Set<User>();
     }
 

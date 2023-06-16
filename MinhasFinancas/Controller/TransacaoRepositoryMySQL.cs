@@ -6,16 +6,28 @@ namespace MinhasFinancas.Controller;
 
 public class TransacaoRepositoryMySQL : Repository<Transacao>
 {
-    public TransacaoRepositoryMySQL(AppDbContext context) : base(context)
-    {
-    }
 
-    public List<Transacao> getAllByUser(AppDbContext context, int? userId)
+    public List<Transacao> getTransacoesUser(AppDbContext context, int? userId)
     {
-        List<Transacao> transacoesDoUsuario = context.Transacoes
+        return context.Transacoes
             .Where(t => t.FKuser == userId)
             .ToList();
-
-        return transacoesDoUsuario;
     }
+
+    public List<Transacao> getTransacoesFilter(AppDbContext context, Transacao obj, string atributoNome, string dado,
+        int? userId)
+    {
+        List<Transacao> transacoesUser = getTransacoesUser(context, userId);
+
+        if (atributoNome != "")
+        {
+            transacoesUser = transacoesUser
+                .Where(t =>
+                    atributoNome == dado)
+                .ToList();
+        }
+
+        return transacoesUser;
+    }
+    
 }

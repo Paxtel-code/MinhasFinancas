@@ -6,9 +6,6 @@ namespace MinhasFinancas.Controller;
 
 public class UserRepositoryMySQL : Repository<User>, IUserRepository
 {
-    public UserRepositoryMySQL(AppDbContext context) : base(context)
-    {
-    }
 
     public User getByEmail(AppDbContext context, string email)
     {

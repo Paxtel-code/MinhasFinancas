@@ -8,18 +8,14 @@ public interface IRepository<T>
     public void remove(AppDbContext context, int id);
     public void update(AppDbContext context, int id, T newEntidade);
     public void getAll(AppDbContext context);
-    public T existInDatabase(AppDbContext context, T obj, string atributoNome, string dado);
+    public T existInDatabase(AppDbContext context, string atributoNome, string dado);
     public T getById(AppDbContext context, int id);
 }
 
 public class Repository<T> : IRepository<T> where T : class
 {
-    public AppDbContext context;
-
-    public Repository(AppDbContext context)
-    {
-        this.context = context;
-    }
+    public AppDbContext context = new AppDbContext();
+    
 
     public void insert(AppDbContext context, T entidade)
     {
@@ -46,9 +42,8 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public T existInDatabase(AppDbContext context, T obj, string atributoNome, string dado)
+    public T existInDatabase(AppDbContext context, string atributoNome, string dado)
     {
-        PropertyInfo atributo = obj.GetType().GetProperty(atributoNome);
         return context.Set<T>().First(u => atributoNome == dado);
     }
 

@@ -21,7 +21,7 @@ internal abstract class Program
                 switch (menu())
                 {
                     case 1:
-                        gerDeTransacoes.listTransacoesUser(context, user.Id);
+                        gerDeTransacoes.listTransacoes(user.Id);
                         break;
                     case 2:
                         break;
