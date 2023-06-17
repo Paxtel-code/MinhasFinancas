@@ -25,17 +25,26 @@ public class AppDbContext : DbContext
     {
         try
         {
+            //setar o nome das tabelas
             modelBuilder.Entity<Transacao>().ToTable("tb_transacao");
             modelBuilder.Entity<Categoria>().ToTable("tb_categoria");
             modelBuilder.Entity<User>().ToTable("tb_user");
 
+            //setar as chaves primarias
             modelBuilder.Entity<Transacao>().HasKey(t => t.Id);
             modelBuilder.Entity<Categoria>().HasKey(c => c.Id);
             modelBuilder.Entity<User>().HasKey(u => u.Id);
 
-            modelBuilder.Entity<Transacao>(t => t.Property(e => e.Data_pagar).HasColumnType("date"));
-            modelBuilder.Entity<Transacao>(t => t.Property(e => e.Data_criado).HasColumnType("date"));
-            
+            //setar as chaves estrangeiras
+            modelBuilder.Entity<Transacao>()
+                .HasOne(t => t.User)
+                .WithMany(u => u.Transacoes)
+                .HasForeignKey(t => t.UserId);
+
+            modelBuilder.Entity<Transacao>()
+                .HasOne(t => t.Categoria)
+                .WithMany(c => c.Transacoes)
+                .HasForeignKey(t => t.CategoriaId);
         }
         catch (Exception e)
         {

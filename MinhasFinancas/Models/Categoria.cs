@@ -8,6 +8,8 @@ public class Categoria
 {
     [Key] public int? Id { get; set; }
     public string Descricao { get; set; }
+    
+    public List<Transacao> Transacoes { get; set; }
 
     public Categoria()
     {
@@ -22,6 +24,6 @@ public class Categoria
 
     public override string ToString()
     {
-        return "\n[" + Id + "]\nDescricao: " + Descricao;
+        return "\n[" + Id + "] Descricao: " + Descricao;
     }
 }

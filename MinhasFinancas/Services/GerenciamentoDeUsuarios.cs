@@ -62,7 +62,6 @@ public class GerenciamentoDeUsuarios
             throw;
         }
     }
-
     public User validateUsuario(AppDbContext context)
     {
         string email, senha;

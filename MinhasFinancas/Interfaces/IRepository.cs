@@ -10,7 +10,7 @@ public interface IRepository<T>
     public void update(int id, T newEntidade);
     public void getAll();
     public T existInDatabase(string table, string column, string dado);
-    public T getById(int id);
+    public T getById(int? id);
 }
 
 public class Repository<T> : IRepository<T> where T : class
@@ -54,7 +54,7 @@ public class Repository<T> : IRepository<T> where T : class
         return a;
     }
 
-    public T getById(int id)
+    public T getById(int? id)
     {
         return context.Set<T>().Find(id);
     }

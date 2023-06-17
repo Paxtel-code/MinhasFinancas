@@ -29,24 +29,23 @@ internal abstract class Program
                 switch (menu())
                 {
                     case 1:
+                        Console.Clear();
                         gerDeTransacoes.listTransacoes(user);
                         break;
                     case 2:
+                        Console.Clear();
                         gerDeTransacoes.createTransacao(user);
                         break;
                     case 3:
+                        Console.Clear();
                         break;
                     case 4:
+                        Console.Clear();
                         break;
                     case 5:
+                        Console.Clear();
                         break;
-                    case 6:
-                        break;
-                    case 7:
-                        break;
-                    case 8:
-                        break;
-                    case 9:
+                    case 0:
                         exec = false;
                         break;
                 }
@@ -61,7 +60,7 @@ internal abstract class Program
         Console.WriteLine("3 - Remover Transacao");
         Console.WriteLine("4 - Editar Transacao");
         Console.WriteLine("5 - Listar Categorias");
-        Console.WriteLine("9 - Sair");
+        Console.WriteLine("0 - Sair");
         int op = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
         Console.WriteLine();
         return op;

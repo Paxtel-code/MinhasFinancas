@@ -11,15 +11,15 @@ public class SeedDatabaseCategoria
         {
             var categorias = new List<Categoria>()
             {
-                new Categoria(null, "Alimentação"),
-                new Categoria(null, "Moradia"),
-                new Categoria(null, "Transporte"),
-                new Categoria(null, "Saúde"),
-                new Categoria(null, "Lazer"),
-                new Categoria(null, "Educação"),
-                new Categoria(null, "Vestuário"),
-                new Categoria(null, "Dívidas"),
-                new Categoria(null, "Investimentos"),
+                new Categoria(1, "Alimentação"),
+                new Categoria(2, "Moradia"),
+                new Categoria(3, "Transporte"),
+                new Categoria(4, "Saúde"),
+                new Categoria(5, "Lazer"),
+                new Categoria(6, "Educação"),
+                new Categoria(7, "Vestuário"),
+                new Categoria(8, "Dívidas"),
+                new Categoria(9, "Investimentos"),
             };
             context.AddRange(categorias);
             context.SaveChanges();

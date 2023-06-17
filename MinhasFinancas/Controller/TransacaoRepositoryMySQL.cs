@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using MinhasFinancas.Interfaces;
 using MinhasFinancas.Models;
 
@@ -13,18 +14,18 @@ public class TransacaoRepositoryMySQL : Repository<Transacao>
             .ToList();
     }
 
-    public List<Transacao> getTransacoesFilter(string atributoNome, string dado, User user)
+    public List<Transacao> getTransacoesUserFilter(string atributoNome, string dado, User user)
     {
-        List<Transacao> transacoesUser = getTransacoesUser(user);
+        return context.Transacoes
+            .FromSqlRaw($"SELECT * FROM tb_transacao WHERE UserId = {user.Id} AND {atributoNome} =  '{dado}'")
+            .ToList();
 
-        if (atributoNome != "")
-        {
-            transacoesUser = transacoesUser
-                .Where(t =>
-                    atributoNome == dado)
-                .ToList();
-        }
-
-        return transacoesUser;
+        // if (atributoNome != "")
+        // {
+        //     transacoesUser = transacoesUser
+        //         .Where(t =>
+        //             atributoNome == dado)
+        //         .ToList();
+        // }
     }
 }
