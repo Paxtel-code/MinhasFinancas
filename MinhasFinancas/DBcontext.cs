@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MinhasFinancas.Models;
 
 namespace MinhasFinancas;
@@ -36,6 +35,7 @@ public class AppDbContext : DbContext
 
             modelBuilder.Entity<Transacao>(t => t.Property(e => e.Data_pagar).HasColumnType("date"));
             modelBuilder.Entity<Transacao>(t => t.Property(e => e.Data_criado).HasColumnType("date"));
+            
         }
         catch (Exception e)
         {

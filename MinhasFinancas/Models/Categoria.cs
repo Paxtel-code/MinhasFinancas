@@ -22,6 +22,6 @@ public class Categoria
 
     public override string ToString()
     {
-        return "\nId:" + Id + "\nDescricao: " + Descricao;
+        return "\n[" + Id + "]\nDescricao: " + Descricao;
     }
 }

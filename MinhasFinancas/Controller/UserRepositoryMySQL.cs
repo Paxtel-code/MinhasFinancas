@@ -4,11 +4,7 @@ using MinhasFinancas.Models;
 
 namespace MinhasFinancas.Controller;
 
-public class UserRepositoryMySQL : Repository<User>, IUserRepository
+public class UserRepositoryMySQL : Repository<User>
 {
-
-    public User getByEmail(AppDbContext context, string email)
-    {
-        return context.Users.First(u => u.Email == email);
-    }
+    
 }

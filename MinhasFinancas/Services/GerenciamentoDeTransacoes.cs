@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
 using MinhasFinancas.Controller;
 using MinhasFinancas.Models;
 
@@ -9,40 +8,50 @@ public class GerenciamentoDeTransacoes
 {
     TransacaoRepositoryMySQL _transacaoRepositoryMySql = new TransacaoRepositoryMySQL();
     CategoriaRepositoryMySQL _categoriaRepositoryMySql = new CategoriaRepositoryMySQL();
-    
-    public void createTransacao(AppDbContext context, int userId)
+    AppDbContext _context = new AppDbContext();
+
+    public void createTransacao(User user)
     {
         Console.WriteLine("Digite o valor da transação:");
         double valor = Convert.ToDouble(Console.ReadLine());
 
-        Console.WriteLine("[ 1 - Receita | 2 - Despesa]");
+        Console.WriteLine("[1 - Receita | 2 - Despesa]");
         string tipo;
-        if (Console.ReadLine() == "1")
+        if (Console.ReadKey().KeyChar.ToString() == "1")
             tipo = "Receita";
         else
             tipo = "Despesa";
 
+        Console.WriteLine();
+
         Console.WriteLine("Digite a descricao:");
         string descricao = Console.ReadLine();
 
-        Console.WriteLine("Digite a data de vencimento da transação [dd-mm-aaaa]");
-        DateOnly data_pagar = transformDate(Console.ReadLine());
+        DateOnly? data_pagar;
+        while (true)
+        {
+            Console.WriteLine("Digite a data de vencimento da transação [dd-mm-aaaa]");
+            data_pagar = ConvertToDateOnly(Console.ReadLine());
+            if (data_pagar != null)
+                break;
+        }
 
-        DateOnly data_criado = transformDate(DateOnly.FromDateTime(DateTime.Now).ToString());
+
+        DateOnly data_criado = DateOnly.FromDateTime(DateTime.Now);
 
         string status = "Pendente";
 
 
-        _categoriaRepositoryMySql.getAll(context);
+        _categoriaRepositoryMySql.getAll();
         Console.WriteLine("Digite o número categoria da transacao:");
-        string categoria = _categoriaRepositoryMySql.getById(context, Convert.ToInt32(Console.ReadLine())).Descricao;
+        Categoria categoria = _categoriaRepositoryMySql.getById(Convert.ToInt32(Console.ReadLine()));
 
         try
         {
-            Transacao transacao = new Transacao(null, valor, tipo, descricao, data_pagar, data_criado, status, userId,
+            Transacao transacao = new Transacao(null, valor, tipo, descricao, data_pagar, data_criado, status, user,
                 categoria);
-            _transacaoRepositoryMySql.insert(context, transacao);
-            context.SaveChanges();
+            _transacaoRepositoryMySql.insert(transacao);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
@@ -52,27 +61,56 @@ public class GerenciamentoDeTransacoes
     }
 
 
-    public void removeTransacao(AppDbContext context)
+    public void removeTransacao()
     {
     }
 
-    public void updateTransacao(AppDbContext context)
+    public void updateTransacao()
     {
     }
-    
-    public void listTransacoes(int userId)
+
+    public void listTransacoes(User user)
     {
-        
-        
-        
-        foreach (var transacao in list)
+        List<Transacao> transacoesUser = new List<Transacao>();
+
+        Console.WriteLine("Digite o filtro para listar");
+        Console.WriteLine("[1 - Categoria | 2 - Status]");
+
+        switch (Convert.ToInt32(Console.ReadLine()))
+        {
+            case 1:
+                Console.WriteLine("Digite o ID da categoria:");
+                _categoriaRepositoryMySql.getAll();
+                string categoria = _categoriaRepositoryMySql.getById(Convert.ToInt32(Console.ReadLine())).ToString();
+                transacoesUser = _transacaoRepositoryMySql.getTransacoesFilter("Categoria", categoria, user);
+                break;
+            case 2:
+                Console.WriteLine("Digite o status [Pendente|Resolvido]");
+                string status = Console.ReadLine();
+                transacoesUser = _transacaoRepositoryMySql.getTransacoesFilter("Status", status, user);
+                break;
+        }
+
+
+        foreach (var transacao in transacoesUser)
         {
             Console.WriteLine(transacao);
         }
     }
 
-    public DateOnly transformDate(string date)
+    public DateOnly? ConvertToDateOnly(string date)
     {
-        return DateOnly.ParseExact(date, "dd-mm-yyyy");
+        DateTime parsedDate;
+
+        if (DateTime.TryParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,
+                out parsedDate))
+        {
+            return new DateOnly(parsedDate.Year, parsedDate.Month, parsedDate.Day);
+        }
+        else
+        {
+            Console.WriteLine("String de data inválida!");
+            return null;
+        }
     }
 }

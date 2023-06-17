@@ -21,7 +21,7 @@ namespace MinhasFinancas.Migrations
 
             modelBuilder.Entity("MinhasFinancas.Models.Categoria", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -36,44 +36,48 @@ namespace MinhasFinancas.Migrations
 
             modelBuilder.Entity("MinhasFinancas.Models.Transacao", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("Data_criado")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly>("Data_pagar")
+                    b.Property<DateOnly?>("Data_pagar")
                         .HasColumnType("date");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<string>("FKcategoria")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("FKcodigoId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Valor")
                         .HasColumnType("double");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FKcodigoId");
+                    b.HasIndex("CategoriaId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("tb_transacao", (string)null);
                 });
 
             modelBuilder.Entity("MinhasFinancas.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -96,13 +100,21 @@ namespace MinhasFinancas.Migrations
 
             modelBuilder.Entity("MinhasFinancas.Models.Transacao", b =>
                 {
-                    b.HasOne("MinhasFinancas.Models.User", "FKcodigo")
-                        .WithMany("Transacoes")
-                        .HasForeignKey("FKcodigoId")
+                    b.HasOne("MinhasFinancas.Models.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FKcodigo");
+                    b.HasOne("MinhasFinancas.Models.User", "User")
+                        .WithMany("Transacoes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MinhasFinancas.Models.User", b =>

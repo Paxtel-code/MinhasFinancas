@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+﻿using System.Reflection;
 using MinhasFinancas.Models;
 using MinhasFinancas.Services;
 
@@ -13,17 +13,26 @@ internal abstract class Program
             SeedDatabase.SeedDatabaseCategoria.SeedCategoria(context);
             GerenciamentoDeUsuarios gerDeUsuarios = new GerenciamentoDeUsuarios();
             GerenciamentoDeTransacoes gerDeTransacoes = new GerenciamentoDeTransacoes();
-
-            User user = gerDeUsuarios.validateUsuario(context);
             bool exec = true;
+            User user = null;
 
+            Console.Clear();
+
+            while (user == null)
+                user = gerDeUsuarios.validateUsuario(context);
+
+            Console.Clear();
+
+            Console.WriteLine("Logado como " + user.Nome);
             while (exec)
+            {
                 switch (menu())
                 {
                     case 1:
-                        gerDeTransacoes.listTransacoes(user.Id);
+                        gerDeTransacoes.listTransacoes(user);
                         break;
                     case 2:
+                        gerDeTransacoes.createTransacao(user);
                         break;
                     case 3:
                         break;
@@ -41,6 +50,7 @@ internal abstract class Program
                         exec = false;
                         break;
                 }
+            }
         }
     }
 
@@ -52,6 +62,8 @@ internal abstract class Program
         Console.WriteLine("4 - Editar Transacao");
         Console.WriteLine("5 - Listar Categorias");
         Console.WriteLine("9 - Sair");
-        return Convert.ToInt32(Console.ReadLine());
+        int op = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
+        Console.WriteLine();
+        return op;
     }
 }

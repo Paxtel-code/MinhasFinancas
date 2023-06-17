@@ -20,7 +20,7 @@ public class GerenciamentoDeUsuarios
         {
             Console.WriteLine("Digite seu nome");
             nome = Console.ReadLine();
-            if (_userRepositoryMySql.existInDatabase(context,  "Nome", nome) != null)
+            if (_userRepositoryMySql.existInDatabase("tb_user", "Nome", nome) != null)
                 Console.WriteLine("Nome ja registrado");
             else
                 break;
@@ -30,7 +30,7 @@ public class GerenciamentoDeUsuarios
         {
             Console.WriteLine("Digite seu E-mail");
             email = Console.ReadLine();
-            if (_userRepositoryMySql.existInDatabase(context,  "Email", email) != null)
+            if (_userRepositoryMySql.existInDatabase("tb_user", "Email", email) != null)
                 Console.WriteLine("E-mail ja registrado");
             else
                 break;
@@ -39,7 +39,7 @@ public class GerenciamentoDeUsuarios
         Console.WriteLine("Digite sua senha"); //Inserir Senha 1
         senha1 = Console.ReadLine();
 
-        while (true) //Inserir Senha 1 dnv
+        while (true)
         {
             Console.WriteLine("Digite seu senha novamente");
             senha2 = Console.ReadLine();
@@ -49,11 +49,11 @@ public class GerenciamentoDeUsuarios
                 break;
         }
 
+
         try
         {
             User user = new User(null, nome, email, senha1);
-            _userRepositoryMySql.insert(context, user);
-            context.SaveChanges();
+            _userRepositoryMySql.insert(user);
             return user;
         }
         catch (Exception e)
@@ -66,36 +66,41 @@ public class GerenciamentoDeUsuarios
     public User validateUsuario(AppDbContext context)
     {
         string email, senha;
-        string databaseSenha;
         User databaseUser;
 
-        Console.WriteLine("Possui um perfil? [S/N]");
-        if (Console.ReadLine() == "N")
+        Console.WriteLine("Possui um perfil? [s/n]");
+        if (Console.ReadKey().KeyChar.ToString() == "n")
+        {
+            Console.WriteLine();
             return registerNewUsuario(context);
+        }
+
+        Console.WriteLine();
 
 
-        while (true) //Digitar E-mail e verificar se existe
+        while (true)
         {
             Console.WriteLine("Digite seu E-mail");
             email = Console.ReadLine();
-            databaseUser = _userRepositoryMySql.existInDatabase(context,  "Email", email);
+            if (email == "sair")
+                return null;
+
+            databaseUser = _userRepositoryMySql.existInDatabase("tb_user", "Email", email);
             if (databaseUser == null)
-                Console.WriteLine("E-mail não cadastrado no banco de dados!");
+                Console.WriteLine("E-mail não cadastrado no banco de dados! Digite novamente ou digite [sair]");
             else
                 break;
         }
-
-        databaseSenha = databaseUser.Senha; //Pegar o usuario referente ao E-mail
 
         while (true)
         {
             Console.WriteLine("Digite sua senha");
             senha = Console.ReadLine();
-            if (senha != databaseSenha)
+            if (senha != databaseUser.Senha)
                 Console.WriteLine("Senha incorreta!");
             else
                 break;
-        } //Verificar se a senha digitada bate com o usuario do E-mail
+        }
 
         return databaseUser;
     }
