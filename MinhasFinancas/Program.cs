@@ -38,12 +38,11 @@ internal abstract class Program
                         break;
                     case 3:
                         Console.Clear();
+                        gerDeTransacoes.removeTransacao();
                         break;
                     case 4:
                         Console.Clear();
-                        break;
-                    case 5:
-                        Console.Clear();
+                        gerDeTransacoes.updateTransacao();
                         break;
                     case 0:
                         exec = false;
@@ -59,7 +58,6 @@ internal abstract class Program
         Console.WriteLine("2 - Criar Transacao");
         Console.WriteLine("3 - Remover Transacao");
         Console.WriteLine("4 - Editar Transacao");
-        Console.WriteLine("5 - Listar Categorias");
         Console.WriteLine("0 - Sair");
         int op = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
         Console.WriteLine();

@@ -64,11 +64,55 @@ public class GerenciamentoDeTransacoes
         _transacaoRepositoryMySql.getAll();
         Console.WriteLine("Digite o id da transacao para remover:");
         _transacaoRepositoryMySql.remove(Convert.ToInt32(Console.ReadLine()));
-
     }
 
     public void updateTransacao()
     {
+        _transacaoRepositoryMySql.getAll();
+        Console.WriteLine("Digite o ID da transação que deseja editar:");
+        Transacao oldTransacao = _transacaoRepositoryMySql.getById(Convert.ToInt32(Console.ReadLine()));
+
+        Console.WriteLine("Digite o novo valor da transação:");
+        double valor = Convert.ToDouble(Console.ReadLine());
+
+        Console.WriteLine("[1 - Receita | 2 - Despesa]");
+        string tipo;
+        if (Console.ReadKey().KeyChar.ToString() == "1")
+            tipo = "Receita";
+        else
+            tipo = "Despesa";
+
+        Console.WriteLine();
+
+        Console.WriteLine("Digite a descricao:");
+        string descricao = Console.ReadLine();
+
+        string? data_pagar;
+        while (true)
+        {
+            Console.WriteLine("Digite a data de vencimento da transação [dd/mm/aaaa]");
+            data_pagar = Console.ReadLine();
+            if (data_pagar != null)
+                break;
+        }
+
+
+        string data_criado = oldTransacao.Data_criado;
+
+        Console.WriteLine("[1 - Pendente | 2 - Resolvido]");
+        string status;
+        if (Console.ReadKey().KeyChar.ToString() == "1")
+            status = "Pendente";
+        else
+            status = "Resolvido";
+
+        _categoriaRepositoryMySql.getAll();
+        Console.WriteLine("\nDigite o número categoria da transacao:");
+        Categoria categoria = _categoriaRepositoryMySql.getById(Convert.ToInt32(Console.ReadLine()));
+
+        _transacaoRepositoryMySql.update(oldTransacao.Id, new Transacao(oldTransacao.Id, valor, tipo, descricao,
+            data_pagar, data_criado,
+            status, oldTransacao.UserId, categoria.Id));
     }
 
     public void listTransacoes(User user)
@@ -107,6 +151,7 @@ public class GerenciamentoDeTransacoes
             Console.WriteLine(transacao);
         }
     }
+
 
     // public DateOnly? ConvertToDateOnly(string date)
     // {
