@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using ConsoleTables;
+﻿using MinhasFinancas.CreateTXT;
 using MinhasFinancas.Models;
 using MinhasFinancas.Services;
 
@@ -14,9 +13,10 @@ internal abstract class Program
             SeedDatabase.SeedDatabaseCategoria.SeedCategoria(context);
             GerenciamentoDeUsuarios gerDeUsuarios = new GerenciamentoDeUsuarios();
             GerenciamentoDeTransacoes gerDeTransacoes = new GerenciamentoDeTransacoes();
+            CreateTxt txt = new CreateTxt();
             bool exec = true;
             User user = null;
-            
+
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Bem-vindo ao Minhas Finanças!");
@@ -32,7 +32,7 @@ internal abstract class Program
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("Logado como " + user.Nome);
             Console.ResetColor();
-            
+
             while (exec)
             {
                 switch (menu())
@@ -57,6 +57,10 @@ internal abstract class Program
                         Console.Clear();
                         gerDeTransacoes.updateTransacao();
                         break;
+                    case 6:
+                        Console.Clear();
+                        txt.createTxt(user);
+                        break;
                     case 0:
                         exec = false;
                         break;
@@ -73,6 +77,7 @@ internal abstract class Program
         Console.WriteLine("3 - Criar Transacao");
         Console.WriteLine("4 - Remover Transacao");
         Console.WriteLine("5 - Editar Transacao");
+        Console.WriteLine("6 - Criar arquivo de texto");
         Console.WriteLine("0 - Sair");
         int op = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
         Console.WriteLine();

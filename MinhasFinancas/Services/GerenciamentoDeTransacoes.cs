@@ -181,7 +181,7 @@ public class GerenciamentoDeTransacoes
 
             Console.WriteLine();
 
-            tabelar(transacoesUser);
+            tabelar(transacoesUser).Write(Format.Minimal);
 
             double saldoTotal = 0;
             foreach (var transacao in transacoesUser)
@@ -196,7 +196,7 @@ public class GerenciamentoDeTransacoes
         }
     }
 
-    public void tabelar(List<Transacao> transacoesUser)
+    public ConsoleTable tabelar(List<Transacao> transacoesUser)
     {
         var tabela = new ConsoleTable("ID", "Valor", "Tipo", "Desc", "Pagar", "Criado", "Status", "Categoria");
         foreach (var transacao in transacoesUser)
@@ -214,6 +214,6 @@ public class GerenciamentoDeTransacoes
         }
 
         Console.Clear();
-        tabela.Write(Format.Minimal);
+        return tabela;
     }
 }
