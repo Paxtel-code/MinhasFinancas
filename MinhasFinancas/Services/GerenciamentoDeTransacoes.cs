@@ -49,6 +49,7 @@ public class GerenciamentoDeTransacoes
         Console.Write("\nDigite o número categoria da transacao:");
         _categoriaRepositoryMySql.getAll();
         Console.WriteLine();
+
         Categoria categoria = _categoriaRepositoryMySql.getById(Convert.ToInt32(Console.ReadKey().KeyChar.ToString()));
         Console.WriteLine();
 
@@ -179,20 +180,27 @@ public class GerenciamentoDeTransacoes
                     break;
             }
 
-            Console.WriteLine();
-
-            tabelar(transacoesUser).Write(Format.Minimal);
-
-            double saldoTotal = 0;
-            foreach (var transacao in transacoesUser)
+            if (transacoesUser.IsNullOrEmpty())
             {
-                saldoTotal += transacao.Valor;
+                Console.WriteLine("Nenhuma transacao com este filtro!");
             }
+            else
+            {
+                Console.WriteLine();
 
-            Console.ForegroundColor = saldoTotal > 0 ? ConsoleColor.Green : ConsoleColor.Red;
+                tabelar(transacoesUser).Write(Format.Minimal);
 
-            Console.WriteLine("SALDO GERAL: R$" + saldoTotal);
-            Console.ResetColor();
+                double saldoTotal = 0;
+                foreach (var transacao in transacoesUser)
+                {
+                    saldoTotal += transacao.Valor;
+                }
+
+                Console.ForegroundColor = saldoTotal > 0 ? ConsoleColor.Green : ConsoleColor.Red;
+
+                Console.WriteLine("SALDO GERAL: R$" + saldoTotal);
+                Console.ResetColor();
+            }
         }
     }
 

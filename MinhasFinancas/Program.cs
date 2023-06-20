@@ -81,7 +81,7 @@ internal abstract class Program
         Console.WriteLine("0 - Sair");
         int op;
 
-        while (int.TryParse(Console.ReadKey().KeyChar.ToString(), out op) && op > 6)
+        while (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out op) || op > 6)
         {
             Console.WriteLine("\nNão é uma opção! Digite novamente:");
         }

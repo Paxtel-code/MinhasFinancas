@@ -20,7 +20,8 @@ public class Transacao
 
 
     public int? UserId { get; set; }
-    [ForeignKey("UserId")] public User User { get; set; }
+    [ForeignKey("UserId")] 
+    public User User { get; set; }
 
     public int? CategoriaId { get; set; }
     [ForeignKey("CategoriaId")] public Categoria Categoria { get; set; }
