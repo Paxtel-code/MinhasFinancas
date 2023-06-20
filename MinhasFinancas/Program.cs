@@ -79,8 +79,13 @@ internal abstract class Program
         Console.WriteLine("5 - Editar Transacao");
         Console.WriteLine("6 - Criar arquivo de texto");
         Console.WriteLine("0 - Sair");
-        int op = Convert.ToInt32(Console.ReadKey().KeyChar.ToString());
-        Console.WriteLine();
+        int op;
+
+        while (int.TryParse(Console.ReadKey().KeyChar.ToString(), out op) && op > 6)
+        {
+            Console.WriteLine("\nNão é uma opção! Digite novamente:");
+        }
+
         return op;
     }
 }
