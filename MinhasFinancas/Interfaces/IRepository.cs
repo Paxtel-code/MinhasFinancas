@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace MinhasFinancas.Interfaces;
 
@@ -31,8 +30,7 @@ public class Repository<T> : IRepository<T> where T : class
 
     public void update(int? id, T newEntidade)
     {
-        var entidade = context.Set<T>().Find(id);
-        context.Entry(entidade).CurrentValues.SetValues(newEntidade);
+        context.Entry(context.Set<T>().Find(id)).CurrentValues.SetValues(newEntidade);
         context.SaveChanges();
     }
 
@@ -58,4 +56,5 @@ public class Repository<T> : IRepository<T> where T : class
     {
         return context.Set<T>().Find(id);
     }
+    
 }

@@ -41,9 +41,7 @@ public class Transacao
         Data_criado = dataCriado;
         Status = status;
         UserId = userId;
-        User = _userRepositoryMySql.getById(userId);
         CategoriaId = categoriaId;
-        Categoria = _categoriaRepositoryMySql.getById(categoriaId);
     }
 
     public override string ToString()
@@ -55,6 +53,6 @@ public class Transacao
                "\nData_pagar: " + Data_pagar +
                "\nData_criado: " + Data_criado +
                "\nStatus: " + Status +
-               "\nCategoria: " + Categoria;
+               "\nCategoria: " + _categoriaRepositoryMySql.getById(CategoriaId).Descricao;
     }
 }

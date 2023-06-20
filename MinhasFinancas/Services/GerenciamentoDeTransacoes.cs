@@ -1,6 +1,7 @@
-﻿using System.Globalization;
-using MinhasFinancas.Controller;
+﻿using MinhasFinancas.Controller;
 using MinhasFinancas.Models;
+using ConsoleTables;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MinhasFinancas.Services;
 
@@ -20,7 +21,11 @@ public class GerenciamentoDeTransacoes
         if (Console.ReadKey().KeyChar.ToString() == "1")
             tipo = "Receita";
         else
+        {
             tipo = "Despesa";
+            valor *= -1;
+        }
+
 
         Console.WriteLine();
 
@@ -41,9 +46,11 @@ public class GerenciamentoDeTransacoes
 
         string status = "Pendente";
 
+        Console.Write("\nDigite o número categoria da transacao:");
         _categoriaRepositoryMySql.getAll();
-        Console.WriteLine("\nDigite o número categoria da transacao:");
-        Categoria categoria = _categoriaRepositoryMySql.getById(Convert.ToInt32(Console.ReadLine()));
+        Console.WriteLine();
+        Categoria categoria = _categoriaRepositoryMySql.getById(Convert.ToInt32(Console.ReadKey().KeyChar.ToString()));
+        Console.WriteLine();
 
         try
         {
@@ -56,6 +63,25 @@ public class GerenciamentoDeTransacoes
         {
             Console.WriteLine(e);
             throw;
+        }
+    }
+
+    public void resolverTransacao(User user)
+    {
+        List<Transacao> transacoesUser =
+            _transacaoRepositoryMySql.getTransacoesUserFilter("Status", "Pendente", user);
+        if (transacoesUser.IsNullOrEmpty())
+        {
+            Console.WriteLine("Não tem nenhuma transação pendente");
+        }
+        else
+        {
+            tabelar(transacoesUser);
+
+            Console.WriteLine("Digite o ID da transacao para concluir");
+            var transacao = _transacaoRepositoryMySql.getById(Convert.ToInt32(Console.ReadKey().KeyChar.ToString()));
+            transacao.Status = "Resolvido";
+            _transacaoRepositoryMySql.update(transacao.Id, transacao);
         }
     }
 
@@ -119,53 +145,75 @@ public class GerenciamentoDeTransacoes
     {
         List<Transacao> transacoesUser = _transacaoRepositoryMySql.getTransacoesUser(user);
 
-        Console.WriteLine("Digite o filtro para listar");
-        Console.WriteLine("[0 - Nenhum |1 - Categoria | 2 - Status | 3 - Tipo]");
-
-        switch (Convert.ToInt32(Console.ReadKey().KeyChar.ToString()))
+        if (transacoesUser.IsNullOrEmpty())
         {
-            case 1:
-                Console.Write("Digite o ID da categoria:");
-                _categoriaRepositoryMySql.getAll();
-                Console.WriteLine();
-                string? categoria = _categoriaRepositoryMySql
-                    .getById(Convert.ToInt32(Console.ReadKey().KeyChar.ToString())).Id.ToString();
-                transacoesUser =
-                    _transacaoRepositoryMySql.getTransacoesUserFilter("CategoriaId", categoria, user);
-                break;
-            case 2:
-                Console.WriteLine("Digite o status [Pendente|Resolvido]");
-                string status = Console.ReadLine();
-                transacoesUser = _transacaoRepositoryMySql.getTransacoesUserFilter("Status", status, user);
-                break;
-            case 3:
-                Console.WriteLine("Digite o tipo [Receita|Despesa]");
-                string tipo = Console.ReadLine();
-                transacoesUser = _transacaoRepositoryMySql.getTransacoesUserFilter("Tipo", tipo, user);
-                break;
+            Console.WriteLine("Usuário não tem nenhuma transação!");
         }
-
-
-        foreach (var transacao in transacoesUser)
+        else
         {
-            Console.WriteLine(transacao);
+            Console.WriteLine("Digite o filtro para listar");
+            Console.WriteLine("[0 - Nenhum |1 - Categoria | 2 - Status | 3 - Tipo]");
+
+            switch (Convert.ToInt32(Console.ReadKey().KeyChar.ToString()))
+            {
+                case 1:
+                    Console.Write("Digite o ID da categoria:");
+                    Console.WriteLine();
+                    _categoriaRepositoryMySql.getAll();
+                    Console.WriteLine();
+                    string? categoria = _categoriaRepositoryMySql
+                        .getById(Convert.ToInt32(Console.ReadKey().KeyChar.ToString())).Id.ToString();
+                    Console.WriteLine();
+                    transacoesUser =
+                        _transacaoRepositoryMySql.getTransacoesUserFilter("CategoriaId", categoria, user);
+                    break;
+                case 2:
+                    Console.WriteLine("Digite o status [Pendente|Resolvido]");
+                    string status = Console.ReadLine();
+                    transacoesUser = _transacaoRepositoryMySql.getTransacoesUserFilter("Status", status, user);
+                    break;
+                case 3:
+                    Console.WriteLine("Digite o tipo [Receita|Despesa]");
+                    string tipo = Console.ReadLine();
+                    transacoesUser = _transacaoRepositoryMySql.getTransacoesUserFilter("Tipo", tipo, user);
+                    break;
+            }
+
+            Console.WriteLine();
+
+            tabelar(transacoesUser);
+
+            double saldoTotal = 0;
+            foreach (var transacao in transacoesUser)
+            {
+                saldoTotal += transacao.Valor;
+            }
+
+            Console.ForegroundColor = saldoTotal > 0 ? ConsoleColor.Green : ConsoleColor.Red;
+
+            Console.WriteLine("SALDO GERAL: R$" + saldoTotal);
+            Console.ResetColor();
         }
     }
 
+    public void tabelar(List<Transacao> transacoesUser)
+    {
+        var tabela = new ConsoleTable("ID", "Valor", "Tipo", "Desc", "Pagar", "Criado", "Status", "Categoria");
+        foreach (var transacao in transacoesUser)
+        {
+            tabela.AddRow(
+                transacao.Id.ToString(),
+                transacao.Valor < 0 ? transacao.Valor : " " + transacao.Valor,
+                transacao.Tipo,
+                transacao.Descricao,
+                transacao.Data_pagar,
+                transacao.Data_criado,
+                transacao.Status,
+                _categoriaRepositoryMySql.getById(transacao.CategoriaId).Descricao
+            );
+        }
 
-    // public DateOnly? ConvertToDateOnly(string date)
-    // {
-    //     DateTime parsedDate;
-    //
-    //     if (DateTime.TryParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None,
-    //             out parsedDate))
-    //     {
-    //         return new DateOnly(parsedDate.Year, parsedDate.Month, parsedDate.Day);
-    //     }
-    //     else
-    //     {
-    //         Console.WriteLine("String de data inválida!");
-    //         return null;
-    //     }
-    // }
+        Console.Clear();
+        tabela.Write(Format.Minimal);
+    }
 }

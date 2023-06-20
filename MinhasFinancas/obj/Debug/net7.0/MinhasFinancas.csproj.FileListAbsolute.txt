@@ -81,3 +81,4 @@ D:\Faculdade\C#\MinhasFinancas\MinhasFinancas\obj\Debug\net7.0\refint\MinhasFina
 D:\Faculdade\C#\MinhasFinancas\MinhasFinancas\obj\Debug\net7.0\MinhasFinancas.pdb
 D:\Faculdade\C#\MinhasFinancas\MinhasFinancas\obj\Debug\net7.0\MinhasFinancas.genruntimeconfig.cache
 D:\Faculdade\C#\MinhasFinancas\MinhasFinancas\obj\Debug\net7.0\ref\MinhasFinancas.dll
+D:\Faculdade\C#\MinhasFinancas\MinhasFinancas\bin\Debug\net7.0\ConsoleTables.dll

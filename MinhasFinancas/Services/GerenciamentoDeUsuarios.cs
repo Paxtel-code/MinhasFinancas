@@ -67,7 +67,7 @@ public class GerenciamentoDeUsuarios
         string email, senha;
         User databaseUser;
 
-        Console.WriteLine("Possui um perfil? [s/n]");
+        Console.WriteLine("Já possui um perfil? [s/n]");
         if (Console.ReadKey().KeyChar.ToString() == "n")
         {
             Console.WriteLine();
